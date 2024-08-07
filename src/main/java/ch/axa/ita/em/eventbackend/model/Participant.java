@@ -1,28 +1,29 @@
 package ch.axa.ita.em.eventbackend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Table(name = "participant")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Participant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long event_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long participant_id;
 
-    public String title;
-    public String description;
-    public Date date;
-    public String location;
-    public String owner_email;
-    public int participant_limit;
-    public int category_id;
-    public String keywords;
-    public String image;
+    public int event_id;
+    public String name;
+    public String email;
+    public int rating;
+    public LocalDateTime registration_time;
+    public boolean attendance_status;
+
+
 }

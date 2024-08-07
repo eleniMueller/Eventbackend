@@ -1,14 +1,23 @@
 package ch.axa.ita.em.eventbackend;
 
+import ch.axa.ita.em.eventbackend.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EventBackendApplication {
+public class EventBackendApplication implements CommandLineRunner {
+
+    @Autowired
+    private CategoryService categoryService;
 
     public static void main(String[] args) {
         SpringApplication.run(EventBackendApplication.class, args);
-        System.out.println("Hello world");
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        categoryService.insertDefaultCategories();
+    }
 }
