@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -26,7 +26,7 @@ public class Event {
 
     @Getter
     @Setter
-    public Date date;
+    public LocalDate date;
 
     @Getter
     @Setter

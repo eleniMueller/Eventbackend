@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
+import java.util.logging.Logger;
+
 
 @RestController
 @RequestMapping("/participants")
@@ -16,9 +18,14 @@ public class ParticipantController {
     private ParticipantService participantService;
 
     @PostMapping("/register")
-    public ResponseEntity<Participant> registerParticipant(@RequestParam int eventId, @RequestParam String name, @RequestParam String email) {
-        Participant participant = participantService.registerParticipant(eventId, name, email);
-        return new ResponseEntity<>(participant, HttpStatus.CREATED);
+    public ResponseEntity<String> registerParticipant(@RequestBody Participant participant) {
+        try {
+            System.out.println(participant);
+            participantService.registerParticipant(participant);
+            Logger.getLogger("Participant registered successfully");
+            return ResponseEntity.ok("Participant registered successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Participant already attending");
+        }
     }
-
 }

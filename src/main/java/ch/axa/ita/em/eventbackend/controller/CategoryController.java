@@ -1,7 +1,6 @@
 package ch.axa.ita.em.eventbackend.controller;
 
 import ch.axa.ita.em.eventbackend.service.CategoryService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,7 @@
 package ch.axa.ita.em.eventbackend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -18,11 +16,28 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long participant_id;
 
-    public int event_id;
+    @Getter
+    @Setter
+    public int eventId;
+
+    @Getter
+    @Setter
     public String name;
+
+    @Getter
+    @Setter
     public String email;
+
+    @Getter
+    @Setter
     public int rating;
+
+    @Getter
+    @Setter
     public LocalDateTime registration_time;
+
+    @Getter
+    @Setter
     public boolean attendance_status;
 
 
