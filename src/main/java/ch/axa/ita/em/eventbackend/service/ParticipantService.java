@@ -7,7 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ParticipantService {
@@ -27,14 +26,18 @@ public class ParticipantService {
         participantRepository.deleteById(participantId);
     }
 
-    public Participant updateParticipant(Long participantId, Participant newParticipant) {
+    public void updateParticipant(Long participantId, Participant newParticipant) {
         try {
             Participant existingParticipant = participantRepository.findById(participantId)
                     .orElseThrow(() -> new EmptyResultDataAccessException("Participant with ID " + participantId + " does not exist.", 1));
             newParticipant.setParticipant_id(existingParticipant.getParticipant_id());
-            return participantRepository.save(newParticipant);
+            participantRepository.save(newParticipant);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
+    }
+
+    public void deleteParticipantsByEventId(int eventId) {
+
     }
 }
