@@ -1,5 +1,6 @@
-package ch.axa.ita.em.eventbackend.controller;
+package ch.axa.ita.em.eventbackend.participant;
 
+import ch.axa.ita.em.eventbackend.controller.ParticipantController;
 import ch.axa.ita.em.eventbackend.model.Participant;
 import ch.axa.ita.em.eventbackend.service.ParticipantService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-public class ParticipantControllerTest {
+class ParticipantControllerTest {
 
     @Mock
     private ParticipantService participantService;
@@ -25,110 +27,80 @@ public class ParticipantControllerTest {
     private ParticipantController participantController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testRegisterParticipant() {
+    void testRegisterParticipantSuccess() {
         Participant participant = new Participant();
-        when(participantService.registerParticipant(participant)).thenReturn(participant);
-
+        when(participantService.registerParticipant(any(Participant.class))).thenReturn(participant);
         ResponseEntity<String> response = participantController.registerParticipant(participant);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Participant registered successfully", response.getBody());
+        verify(participantService, times(1)).registerParticipant(participant);
     }
 
     @Test
-    public void testRegisterParticipant_Conflict() {
-        Participant participant = new Participant();
-        doThrow(new IllegalArgumentException("Participant already attending")).when(participantService).registerParticipant(participant);
-
-        ResponseEntity<String> response = participantController.registerParticipant(participant);
-
+    void testRegisterParticipantConflict() {
+        doThrow(new IllegalArgumentException("Participant already attending")).when(participantService).registerParticipant(any(Participant.class));
+        ResponseEntity<String> response = participantController.registerParticipant(new Participant());
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("Participant already attending", response.getBody());
     }
 
     @Test
-    public void testGetParticipantsByEventId() {
-        int eventId = 1;
+    void testGetParticipantsByEventIdSuccess() {
         Participant participant1 = new Participant();
-        participant1.setEventId(eventId);
         Participant participant2 = new Participant();
-        participant2.setEventId(eventId);
-
-        when(participantService.getParticipantsByEventId(eventId)).thenReturn(Arrays.asList(participant1, participant2));
-
-        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(eventId);
-
+        when(participantService.getParticipantsByEventId(anyInt())).thenReturn(Arrays.asList(participant1, participant2));
+        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());
     }
 
     @Test
-    public void testGetParticipantsByEventId_NoParticipants() {
-        int eventId = 1;
-
-        when(participantService.getParticipantsByEventId(eventId)).thenReturn(Arrays.asList());
-
-        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(eventId);
-
+    void testGetParticipantsByEventIdNoContent() {
+        when(participantService.getParticipantsByEventId(anyInt())).thenReturn(Arrays.asList());
+        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(1);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
-    public void testGetParticipantsByEventId_Error() {
-        int eventId = 1;
-        when(participantService.getParticipantsByEventId(eventId)).thenThrow(new RuntimeException("Error fetching participants"));
-
-        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(eventId);
-
+    void testGetParticipantsByEventIdInternalServerError() {
+        doThrow(new RuntimeException("DB error")).when(participantService).getParticipantsByEventId(anyInt());
+        ResponseEntity<List<Participant>> response = participantController.getParticipantsByEventId(1);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
-    public void testDeleteParticipant() {
-        Long participantId = 1L;
-        doNothing().when(participantService).deleteParticipant(participantId);
-
-        ResponseEntity<String> response = participantController.deleteParticipant(participantId);
-
+    void testDeleteParticipantSuccess() {
+        doNothing().when(participantService).deleteParticipant(anyLong());
+        ResponseEntity<String> response = participantController.deleteParticipant(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Participant deleted successfully", response.getBody());
     }
 
     @Test
-    public void testDeleteParticipant_Error() {
-        Long participantId = 1L;
-        doThrow(new RuntimeException("Error deleting participant")).when(participantService).deleteParticipant(participantId);
-
-        ResponseEntity<String> response = participantController.deleteParticipant(participantId);
-
+    void testDeleteParticipantInternalServerError() {
+        doThrow(new RuntimeException("DB error")).when(participantService).deleteParticipant(anyLong());
+        ResponseEntity<String> response = participantController.deleteParticipant(1L);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
-    public void testUpdateParticipant() {
-        Long participantId = 1L;
-        Participant participant = new Participant();
-        doNothing().when(participantService).updateParticipant(participantId, participant);
-
-        ResponseEntity<String> response = participantController.updateParticipant(participantId, participant);
-
+    void testUpdateParticipantSuccess() {
+        doNothing().when(participantService).updateParticipant(anyLong(), any(Participant.class));
+        ResponseEntity<String> response = participantController.updateParticipant(1L, new Participant());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Participant updated successfully", response.getBody());
     }
 
     @Test
-    public void testUpdateParticipant_Error() {
-        Long participantId = 1L;
-        Participant participant = new Participant();
-        doThrow(new RuntimeException("Error updating participant")).when(participantService).updateParticipant(participantId, participant);
-
-        ResponseEntity<String> response = participantController.updateParticipant(participantId, participant);
-
+    void testUpdateParticipantInternalServerError() {
+        doThrow(new RuntimeException("DB error")).when(participantService).updateParticipant(anyLong(), any(Participant.class));
+        ResponseEntity<String> response = participantController.updateParticipant(1L, new Participant());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 }

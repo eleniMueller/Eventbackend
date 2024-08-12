@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    private static final Logger logger = Logger.getLogger(CategoryService.class.getName());
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
@@ -30,17 +33,19 @@ public class CategoryService {
                     new Category(7L, "Öffentliche Veranstaltung", "Ein Anlass, der öffentlich ist.")
             );
             categoryRepository.saveAll(defaultCategories);
+            logger.info("Default categories inserted successfully");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning("Error while inserting default categories: " + e.getMessage());
         }
-
     }
 
     public String getCategoryById(Long id) {
         try {
-            return categoryRepository.findById(id).orElse(null).getName();
+            return categoryRepository.findById(id)
+                    .map(Category::getName)
+                    .orElse(null);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning("Error while fetching category: " + e.getMessage());
             return null;
         }
     }

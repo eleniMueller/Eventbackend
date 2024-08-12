@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
     List<Participant> findByEventId(int eventId);
-}
 
+    void deleteByEventId(Long id);
+}

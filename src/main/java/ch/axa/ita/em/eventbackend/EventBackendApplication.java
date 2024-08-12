@@ -18,6 +18,10 @@ public class EventBackendApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        categoryService.insertDefaultCategories();
+        try {
+            categoryService.insertDefaultCategories();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while inserting default categories: " + e.getMessage());
+        }
     }
 }
