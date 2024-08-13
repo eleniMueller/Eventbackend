@@ -3,9 +3,9 @@ package ch.axa.ita.em.eventbackend.controller;
 import ch.axa.ita.em.eventbackend.model.Participant;
 import ch.axa.ita.em.eventbackend.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/participants")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class ParticipantController {
 
     @Autowired

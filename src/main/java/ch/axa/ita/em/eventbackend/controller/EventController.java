@@ -2,7 +2,6 @@ package ch.axa.ita.em.eventbackend.controller;
 
 import ch.axa.ita.em.eventbackend.model.Event;
 import ch.axa.ita.em.eventbackend.service.EventService;
-import ch.qos.logback.classic.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

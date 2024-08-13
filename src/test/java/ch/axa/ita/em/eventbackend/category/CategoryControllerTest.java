@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
 class CategoryControllerTest {
 
     @Mock
@@ -22,12 +23,14 @@ class CategoryControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testGetCategoryByIdSuccess() {
         when(categoryService.getCategoryById(1L)).thenReturn("Feier/Apéro");
         String response = categoryController.getCategoryById(1L);
         assertEquals("Feier/Apéro", response);
     }
+
     @Test
     void testGetCategoryByIdNotFound() {
         when(categoryService.getCategoryById(1L)).thenReturn(null);
